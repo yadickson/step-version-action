@@ -9,8 +9,7 @@ runs:
   using: "composite"
   steps:
 
-    - name: cache version
-      if: hashFiles('version.txt') != ''
+    - name: getting version
       uses: actions/cache@v5
       with:
         path: version.txt

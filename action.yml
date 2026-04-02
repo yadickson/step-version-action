@@ -4,6 +4,11 @@ outputs:
   version:
     description: "Random number"
     value: ${{ steps.reading-version.outputs.version }}
+
+branding:
+  icon: 'box'
+  color: 'green'
+
 runs:
   using: "composite"
   steps:

@@ -34,7 +34,7 @@ runs:
         echo "version=$(echo ${PROJECT_VERSION})" >> $GITHUB_OUTPUT
       shell: bash
       env:
-        PROJECT_VERSION = ${{ env.VERSION }}
+        PROJECT_VERSION: ${{ env.VERSION }}
 
     - name: upload version
       uses: actions/upload-artifact@v6

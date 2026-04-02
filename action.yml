@@ -35,6 +35,7 @@ runs:
     - name: Sharing Version
       uses: actions/cache@v4
       with:
+        key: version.txt
         path: version.txt
 
     - name: Upload Version
@@ -42,3 +43,5 @@ runs:
       with:
         name: version
         path: version.txt
+        retention-days: 1
+

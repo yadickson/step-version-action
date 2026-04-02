@@ -1,5 +1,5 @@
-name: 'actions/build'
-description: 'Building project'
+name: 'actions/test'
+description: 'Testing project'
 
 branding:
   icon: 'box'
@@ -18,9 +18,11 @@ runs:
           package-lock.json
         key: cache-dependencies
 
-    - name: building node project
+    - name: testing node project
       if: hashFiles('package.json') != ''
-      run: npm run build
+      run: npm run test
+      id: testing-node
+      continue-on-error: true
       shell: bash
 
     - name: getting python dependencies
@@ -31,10 +33,29 @@ runs:
           requirements.txt
         key: cache-dependencies
 
-    - name: building python project
+    - name: testing python project
       if: hashFiles('pyproject.toml') != ''
       run: |
         pip install .[dev]
         export PATH=$PATH:/app/.local/bin
-        poetry build
+        poetry run poe test
+      id: testing-python
+      continue-on-error: true
+      shell: bash
+
+    - name: upload unit test report
+      uses: actions/upload-artifact@v5
+      with:
+        name: xunit.xml
+        path: reports/xunit.xml
+        retention-days: 1
+
+    - name: testing node project fail
+      if: steps.testing-node.outcome == 'failure'
+      run: exit 1
+      shell: bash
+
+    - name: testing python project fail
+      if: steps.testing-python.outcome == 'failure'
+      run: exit 1
       shell: bash

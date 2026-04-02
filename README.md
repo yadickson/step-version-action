@@ -1,7 +1,7 @@
 STEP VERSION ACTION
 ===================
 
-Step to get version.txt file only with version number
+Step to get and share version.txt file only with version number
 
 
 * Use
@@ -12,7 +12,7 @@ on: [push]
 jobs:
   test_step_version_action:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: getting version
     steps:
       - name: checkout code
         uses: actions/checkout@v5

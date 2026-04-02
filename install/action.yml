@@ -1,0 +1,43 @@
+name: 'actions/install'
+description: 'Install all dependencies'
+
+branding:
+  icon: 'box'
+  color: 'green'
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: installing node dependencies
+      if: hashFiles('package.json') != ''
+      run: npm install --force --verbose
+      shell: bash
+
+    - name: upload node dependencies
+      if: hashFiles('package.json') != ''
+      uses: actions/upload-artifact@v6
+      with:
+        name: dependencies
+        paths:
+        - node_modules/
+        - package-lock.json
+        retention-days: 1
+
+    - name: installing python dependencies
+      if: hashFiles('pyproject.toml') != ''
+      run: |
+        pip install .[dev]
+        export PATH=$PATH:/app/.local/bin
+        poetry export --without-hashes --output requirements.txt
+      shell: bash
+
+    - name: upload python dependencies
+      if: hashFiles('pyproject.toml') != ''
+      uses: actions/upload-artifact@v6
+      with:
+        name: dependencies
+        paths:
+        - requirements.txt
+        retention-days: 1
+

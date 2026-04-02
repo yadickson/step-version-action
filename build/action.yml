@@ -1,0 +1,23 @@
+name: 'actions/build'
+description: 'Building project'
+
+branding:
+  icon: 'box'
+  color: 'green'
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: building node project
+      if: hashFiles('package.json') != ''
+      run: npm run build
+      shell: bash
+
+    - name: building python project
+      if: hashFiles('pyproject.toml') != ''
+      run: |
+        pip install .[dev]
+        export PATH=$PATH:/app/.local/bin
+        poetry build
+      shell: bash

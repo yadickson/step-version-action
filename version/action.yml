@@ -1,4 +1,4 @@
-name: 'step-version-action'
+name: 'actions/version'
 description: 'Create and share version.txt file'
 outputs:
   version:
@@ -13,26 +13,30 @@ runs:
   using: "composite"
   steps:
 
-    - name: Getting Version
+    - name: getting node version
+      if: hashFiles('package.json') != ''
+      run: |
+        VERSION=$(grep 'version' package.json | cut -f2 -d":" | cut -f2 -d\")
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: getting python version
+      if: hashFiles('pyproject.toml') != ''
+      run: |
+        VERSION=$(grep -E '^version' pyproject.toml | cut -f2 -d":" | cut -f2 -d\")
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: reading version
       id: reading-version
       run: |
-        if [ -f package.json ]; then 
-          export VERSION=$(grep 'version' package.json | cut -f2 -d":" | cut -f2 -d\")
-        fi
-        if [ -f pyproject.toml ]; then 
-          export VERSION=$(grep -E '^version' pyproject.toml | cut -f2 -d":" | cut -f2 -d\")
-        fi
-        echo $VERSION > version.txt
-        echo "version=$(echo $VERSION)" >> $GITHUB_OUTPUT
-      shell: bash
-
-    - name: Set GitHub Path
-      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+        echo "${PROJECT_VERSION}" > version.txt
+        echo "version=$(echo ${PROJECT_VERSION})" >> $GITHUB_OUTPUT
       shell: bash
       env:
-        GITHUB_ACTION_PATH: ${{ github.action_path }}
+        PROJECT_VERSION = ${{ env.VERSION }}
 
-    - name: Upload Version
+    - name: upload version
       uses: actions/upload-artifact@v6
       with:
         name: version

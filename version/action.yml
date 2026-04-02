@@ -38,7 +38,7 @@ runs:
 
     - name: upload version
       if: hashFiles('version.txt') != ''
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: version.txt
         key: ${{ runner.os }}-version

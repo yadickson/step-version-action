@@ -9,10 +9,27 @@ runs:
   using: "composite"
   steps:
 
+    - name: getting node dependencies
+      if: hashFiles('package.json') != ''
+      uses: actions/cache@v5
+      with:
+        path: |
+          node_modules
+          package-lock.json
+        key: ${{ runner.os }}-install
+
     - name: building node project
       if: hashFiles('package.json') != ''
       run: npm run build
       shell: bash
+
+    - name: getting python dependencies
+      if: hashFiles('pyproject.toml') != ''
+      uses: actions/cache@v5
+      with:
+        path: |
+          requirements.txt
+        key: ${{ runner.os }}-install
 
     - name: building python project
       if: hashFiles('pyproject.toml') != ''

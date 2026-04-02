@@ -21,7 +21,7 @@ runs:
         path: |
           node_modules
           package-lock.json
-        key: ${{ runner.os }}-build
+        key: ${{ runner.os }}-install
 
     - name: installing python dependencies
       if: hashFiles('pyproject.toml') != ''
@@ -36,4 +36,4 @@ runs:
       uses: actions/cache@v5
       with:
         path: requirements.txt
-        key: ${{ runner.os }}-build
+        key: ${{ runner.os }}-install

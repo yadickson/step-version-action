@@ -13,28 +13,12 @@ runs:
   using: "composite"
   steps:
 
-    - name: getting node version
-      if: hashFiles('package.json') != ''
-      run: |
-        VERSION=$(grep 'version' package.json | cut -f2 -d":" | cut -f2 -d\")
-        echo "VERSION=${VERSION}" >> $GITHUB_ENV
-      shell: bash
+    - id: project_type
+      uses: yadickson/actions-steps/project-type@v1
 
-    - name: getting python version
-      if: hashFiles('pyproject.toml') != ''
-      run: |
-        VERSION=$(grep -E '^version' pyproject.toml | cut -f2 -d":" | cut -f2 -d\")
-        echo "VERSION=${VERSION}" >> $GITHUB_ENV
-      shell: bash
+    - id: projecj_version
+      uses: yadickson/actions-steps/project-version/${{ steps.project_type.outputs.type}}@v1
 
-    - name: reading version
-      id: reading-version
-      run: |
-        echo "${PROJECT_VERSION}" > version.txt
-        echo "version=$(echo ${PROJECT_VERSION})" >> $GITHUB_OUTPUT
-      shell: bash
-      env:
-        PROJECT_VERSION: ${{ env.VERSION }}
-
-    - uses: yadickson/actions-steps/cache-version@v1
+    - id: cache_version
+      uses: yadickson/actions-steps/cache-version@v1
 

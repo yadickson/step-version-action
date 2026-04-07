@@ -9,38 +9,13 @@ runs:
   using: "composite"
   steps:
 
+    - id: project_type
+      uses: yadickson/actions-steps/project-type@v1
+
     - uses: yadickson/actions-steps/cache-dependencies@v1
 
-    - name: testing node project
-      if: hashFiles('package.json') != ''
-      run: npm run test
-      id: testing-node
-      continue-on-error: true
-      shell: bash
+    - if: ${{ steps.project_type.outputs.type }} == 'node'
+      uses: yadickson/actions-steps/project-test/node@v1
 
-    - name: testing python project
-      if: hashFiles('pyproject.toml') != ''
-      run: |
-        pip install .[dev]
-        export PATH=$PATH:/app/.local/bin
-        poetry run poe test
-      id: testing-python
-      continue-on-error: true
-      shell: bash
-
-    - name: upload unit test report
-      uses: actions/upload-artifact@v6
-      with:
-        name: xunit.xml
-        path: reports/xunit.xml
-        retention-days: 1
-
-    - name: testing node project fail
-      if: steps.testing-node.outcome == 'failure'
-      run: exit 1
-      shell: bash
-
-    - name: testing python project fail
-      if: steps.testing-python.outcome == 'failure'
-      run: exit 1
-      shell: bash
+    - if: ${{ steps.project_type.outputs.type }} == 'python'
+      uses: yadickson/actions-steps/project-test/python@v1

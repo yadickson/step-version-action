@@ -1,5 +1,5 @@
-name: 'actions/build'
-description: 'Building project'
+name: 'actions/mutation'
+description: 'Mutation testing project'
 
 branding:
   icon: 'box'
@@ -15,7 +15,7 @@ runs:
     - uses: yadickson/actions-steps/cache-dependencies@v1
 
     - if: ${{ steps.project_type.outputs.type }} == 'node'
-      uses: yadickson/actions-steps/project-build/node@v1
+      uses: yadickson/actions-steps/project-mutation/node@v1
 
     - if: ${{ steps.project_type.outputs.type }} == 'python'
-      uses: yadickson/actions-steps/project-build/python@v1
+      uses: yadickson/actions-steps/project-mutation/python@v1

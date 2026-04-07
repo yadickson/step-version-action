@@ -9,17 +9,13 @@ runs:
   using: "composite"
   steps:
 
-    - name: installing node dependencies
-      if: hashFiles('package.json') != ''
-      run: npm install --force --verbose
-      shell: bash
+    - id: project_type
+      uses: yadickson/actions-steps/project-type@v1
 
-    - name: installing python dependencies
-      if: hashFiles('pyproject.toml') != ''
-      run: |
-        pip install .[dev]
-        export PATH=$PATH:/app/.local/bin
-        poetry export --without-hashes --output requirements.txt
-      shell: bash
+    - if: ${{ steps.project_type.outputs.type }} == 'node'
+      uses: yadickson/actions-steps/project-install/node@v1
+
+    - if: ${{ steps.project_type.outputs.type }} == 'python'
+      uses: yadickson/actions-steps/project-install/python@v1
 
     - uses: yadickson/actions-steps/cache-dependencies@v1

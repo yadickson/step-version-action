@@ -8,8 +8,27 @@ on:
 
 jobs:
 
+  cleaning:
+    name: cleaning
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: version
+      run: |
+        VERSION=$(echo "${{ github.ref_name }}" | awk -F. '{print $1}')
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      shell: bash
+    - uses: dev-drprasad/delete-tag-and-release@v1.1
+      continue-on-error: true
+      with:
+        delete_release: true
+        tag_name: ${{ env.VERSION }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+
   release:
     name: release
+    needs: cleaning
     runs-on: ubuntu-latest
 
     steps:
@@ -25,15 +44,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: tagged
+      - name: version
         run: |
           VERSION=$(echo "${{ github.ref_name }}" | awk -F. '{print $1}')
-          gh release delete "${VERSION}" --cleanup-tag --yes || true
-          gh release create "${VERSION}" --title "${VERSION}"
-          gh release edit "${VERSION}" --draft=false --latest
-          gh release view "${VERSION}" --json assets --jq '.assets[].name' | xargs -I {} gh release delete-asset "${VERSION}" "{}" --yes
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
         shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+      - name: tagged
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          tag_name: ${{ env.VERSION }}
+          make_latest: false
+

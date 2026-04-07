@@ -14,8 +14,8 @@ runs:
 
     - uses: yadickson/actions-steps/cache-dependencies@v1
 
-    - if: ${{ steps.project_type.outputs.type }} == 'node'
+    - if: steps.project_type.outputs.type == "node"
       uses: yadickson/actions-steps/project-test/node@v1
 
-    - if: ${{ steps.project_type.outputs.type }} == 'python'
+    - if: steps.project_type.outputs.type == "python"
       uses: yadickson/actions-steps/project-test/python@v1

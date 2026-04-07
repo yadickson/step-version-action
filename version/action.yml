@@ -16,10 +16,10 @@ runs:
     - id: project_type
       uses: yadickson/actions-steps/project-type@v1
 
-    - if: ${{ steps.project_type.outputs.type }} == 'node'
+    - if: steps.project_type.outputs.type == "node"
       uses: yadickson/actions-steps/project-version/node@v1
 
-    - if: ${{ steps.project_type.outputs.type }} == 'python'
+    - if: steps.project_type.outputs.type == "python"
       uses: yadickson/actions-steps/project-version/python@v1
 
     - uses: yadickson/actions-steps/cache-version@v1

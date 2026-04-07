@@ -22,5 +22,5 @@ runs:
     - if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
       uses: yadickson/actions-steps/project-badge@v1
       with:
-        gist-id: ${{ imputs.gist-id }}
-        gist-token: ${{ imputs.gist-token }}
+        gist-id: ${{ inputs.gist-id }}
+        gist-token: ${{ inputs.gist-token }}

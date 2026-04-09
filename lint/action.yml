@@ -1,0 +1,23 @@
+name: 'actions/lint'
+description: 'Linting project'
+
+branding:
+  icon: 'box'
+  color: 'green'
+
+runs:
+  using: "composite"
+  steps:
+
+    - uses: actions/checkout@v5
+
+    - id: project_type
+      uses: yadickson/actions-steps/project-type@v1
+
+    - uses: yadickson/actions-steps/cache-dependencies@v1
+
+    - if: steps.project_type.outputs.type == 'node'
+      uses: yadickson/actions-steps/project-lint/node@v1
+
+    - if: steps.project_type.outputs.type == 'python'
+      uses: yadickson/actions-steps/project-lint/python@v1

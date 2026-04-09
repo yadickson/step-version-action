@@ -26,7 +26,7 @@ runs:
       id: python-version
       uses: yadickson/actions-steps/project-version/python@v1
 
-    - run: echo "VERSION=${{ steps.node-version.outputs.version }}${{ steps.node-version.outputs.version }}" >> $GITHUB_ENV
+    - run: echo "VERSION=${{ steps.node-version.outputs.version }}${{ steps.python-version.outputs.version }}" >> $GITHUB_ENV
       shell: bash
 
     - id: reading-version

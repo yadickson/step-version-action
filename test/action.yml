@@ -1,5 +1,13 @@
 name: 'actions/test'
 description: 'Testing project'
+inputs:
+  gist-id:
+    description: gist id
+    required: true
+
+  gist-token:
+    description: gist token
+    required: true
 
 branding:
   icon: 'box'
@@ -17,7 +25,24 @@ runs:
     - uses: yadickson/actions-steps/cache-dependencies@v1
 
     - if: steps.project_type.outputs.type == 'node'
+      id: node-testing
       uses: yadickson/actions-steps/project-test/node@v1
+      continue-on-error: true
 
     - if: steps.project_type.outputs.type == 'python'
+      id: python-testing
       uses: yadickson/actions-steps/project-test/python@v1
+      continue-on-error: true
+
+    - if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      id: badge-test
+      uses: yadickson/actions-steps/project-badge/test@v1
+      with:
+        gist-id: ${{ inputs.gist-id }}
+        gist-token: ${{ inputs.gist-token }}
+
+    - name: testing project fail
+      if: steps.node-testing.outcome == 'failure' || steps.python-testing.outcome == 'failure'
+      run: exit 1
+      shell: bash
+

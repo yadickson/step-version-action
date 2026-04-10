@@ -18,10 +18,9 @@ jobs:
     steps:
       - id: version
         uses: yadickson/version@REF
-      - run: echo "project version ${PROJECT_VERSION}"
-        shell: bash
-        env:
-          PROJECT_VERSION: ${{ steps.version.outputs.version }}
+        with:
+          gist-id: ${{ secrets.GIST_ID }}
+          gist-token: ${{ secrets.GIST_TOKEN }}
 ```
 
 **actions/install**
@@ -94,6 +93,9 @@ jobs:
     name: running unit test
     steps:
       - uses: yadickson/test@REF
+        with:
+          gist-id: ${{ secrets.GIST_ID }}
+          gist-token: ${{ secrets.GIST_TOKEN }}
 ```
 
 **actions/coverage**
@@ -112,6 +114,9 @@ jobs:
     name: creating coverage report
     steps:
       - uses: yadickson/coverage@REF
+        with:
+          gist-id: ${{ secrets.GIST_ID }}
+          gist-token: ${{ secrets.GIST_TOKEN }}
 ```
 
 **actions/mutation**
@@ -130,6 +135,9 @@ jobs:
     name: running mutation test
     steps:
       - uses: yadickson/mutation@REF
+        with:
+          gist-id: ${{ secrets.GIST_ID }}
+          gist-token: ${{ secrets.GIST_TOKEN }}
 ```
 
 **actions/badge**

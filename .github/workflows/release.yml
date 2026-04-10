@@ -17,7 +17,7 @@ jobs:
       run: |
         VERSION=$(echo "${{ github.ref_name }}" | awk -F. '{print $1}')
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
-      shell: sh
+      shell: bash
     - uses: dev-drprasad/delete-tag-and-release@v1.1
       continue-on-error: true
       with:
@@ -48,7 +48,7 @@ jobs:
         run: |
           VERSION=$(echo "${{ github.ref_name }}" | awk -F. '{print $1}')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
-        shell: sh
+        shell: bash
       - name: tagged
         uses: softprops/action-gh-release@v2
         with:

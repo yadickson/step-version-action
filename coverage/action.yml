@@ -44,5 +44,5 @@ runs:
     - name: coverage project fail
       if: steps.node-coverage.outcome == 'failure' || steps.python-coverage.outcome == 'failure'
       run: exit 1
-      shell: sh
+      shell: bash
 
